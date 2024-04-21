@@ -79,4 +79,17 @@ public class WorkerController {
         return new ResponseEntity<>("Worker was deleted successfully",HttpStatus.OK);
     }
 
+    //URL: http://localhost:8080/api/v1/workers/{id}
+    //Method: PUT
+    @ApiResponse(responseCode = "201",
+            description = "Successful operation, returning Worker updated",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = WorkerDTO.class)))
+    @Transactional
+    @PutMapping("/workers/{id}")
+    public ResponseEntity<Object> updateWorker(@PathVariable("id") int id, @RequestBody WorkerDTO worker) {
+        workerService.updateWorker(id, worker);
+        return new ResponseEntity<>("Worker was updated successfully",HttpStatus.OK);
+    }
+
 }

@@ -76,4 +76,17 @@ public class EmployerController {
      employerService.deleteEmployer(id);
      return new ResponseEntity<>("Employer was deleted successfully",HttpStatus.OK);
     }
+
+    //URL: http://localhost:8080/api/v1/employers/{id}
+    //Method: PUT
+    @Operation(summary = "Update employer")
+    @ApiResponse(responseCode = "200",
+            description = "Successful operation, employer updated",
+            content = @Content(mediaType = "application/json"))
+    @Transactional
+    @PutMapping("/employers/{id}")
+    public ResponseEntity<Object> updateEmployer(@PathVariable("id") int id, @RequestBody EmployerDTO employer) {
+     employerService.updateEmployer(id, employer);
+     return new ResponseEntity<>("Employer was updated successfully",HttpStatus.OK);
+    }
 }
