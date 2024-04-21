@@ -52,43 +52,4 @@ public class WorkerController {
         return new ResponseEntity<List<WorkerDTO>>(workerService.getAllWorkers(), HttpStatus.OK);
     }
 
-    //URL: http://localhost:8080/api/v1/workers/{id}
-    //Method: GET
-    @Operation(summary = "Get Worker by Id")
-    @ApiResponse(responseCode = "201",
-            description = "Successful operation, returning Worker by Id",
-            content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = WorkerDTO.class)))
-    @Transactional(readOnly = true)
-    @GetMapping("/workers/{id}")
-    public ResponseEntity<WorkerDTO> getWorkerById(@PathVariable("id") int id) {
-        return new ResponseEntity<WorkerDTO>(workerService.getWorkerById(id), HttpStatus.OK);
-    }
-
-    //URL: http://localhost:8080/api/v1/workers/{id}
-    //Method: DELETE
-    @Operation(summary = "Delete Worker by Id")
-    @ApiResponse(responseCode = "201",
-            description = "Successful operation, returning Worker deleted",
-            content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = WorkerDTO.class)))
-    @Transactional
-    @DeleteMapping("/workers/{id}")
-    public ResponseEntity<Object> deleteWorker(@PathVariable("id") int id) {
-        workerService.deleteWorker(id);
-        return new ResponseEntity<>("Worker was deleted successfully",HttpStatus.OK);
-    }
-
-    //URL: http://localhost:8080/api/v1/workers/{id}
-    //Method: PUT
-    @ApiResponse(responseCode = "201",
-            description = "Successful operation, returning Worker updated",
-            content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = WorkerDTO.class)))
-    @Transactional
-    @PutMapping("/workers/{id}")
-    public ResponseEntity<Object> updateWorker(@PathVariable("id") int id, @RequestBody WorkerDTO worker) {
-        workerService.updateWorker(id, worker);
-        return new ResponseEntity<>("Worker was updated successfully",HttpStatus.OK);
-    }
 }
