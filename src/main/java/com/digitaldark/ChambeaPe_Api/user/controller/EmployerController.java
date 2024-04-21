@@ -50,4 +50,17 @@ public class EmployerController {
     public ResponseEntity<List<EmployerDTO>> getAllEmployersDTO() {
         return new ResponseEntity<List<EmployerDTO>>(employerService.getAllEmployers(), HttpStatus.OK);
     }
+
+    //URL: http://localhost:8080/api/v1/employers/{id}
+    //Method: GET
+    @Operation(summary = "Get employer by id")
+    @ApiResponse(responseCode = "200",
+            description = "Successful operation, returning employer by id",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = EmployerDTO.class)))
+    @Transactional(readOnly = true)
+    @GetMapping("/employers/{id}")
+    public ResponseEntity<EmployerDTO> getEmployerById(@PathVariable("id") int id) {
+     return new ResponseEntity<EmployerDTO>(employerService.getEmployerById(id), HttpStatus.OK);
+    }
 }

@@ -9,4 +9,6 @@ public interface EmployerService {
     public abstract EmployerEntity createEmployer(EmployerEntity employer);
     public abstract List<EmployerEntity> getAllEmployers_v1();
     public abstract List<EmployerDTO> getAllEmployers();
+    public abstract EmployerDTO getEmployerById(int id);
+
 }

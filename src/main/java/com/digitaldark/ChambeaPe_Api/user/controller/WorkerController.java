@@ -52,4 +52,17 @@ public class WorkerController {
         return new ResponseEntity<List<WorkerDTO>>(workerService.getAllWorkers(), HttpStatus.OK);
     }
 
+    //URL: http://localhost:8080/api/v1/workers/{id}
+    //Method: GET
+    @Operation(summary = "Get Worker by Id")
+    @ApiResponse(responseCode = "201",
+            description = "Successful operation, returning Worker by Id",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = WorkerDTO.class)))
+    @Transactional(readOnly = true)
+    @GetMapping("/workers/{id}")
+    public ResponseEntity<WorkerDTO> getWorkerById(@PathVariable("id") int id) {
+        return new ResponseEntity<WorkerDTO>(workerService.getWorkerById(id), HttpStatus.OK);
+    }
+
 }
