@@ -69,4 +69,6 @@ public class UsersEntity {
     @Column(name = "otp_generated_time", nullable = true)
     private LocalDateTime otpGeneratedTime;
 
+    @Column(name = "is_visible", nullable = false, length = 1)
+    private String isVisible;
 }

@@ -52,6 +52,54 @@ public class EmployerServiceImpl implements EmployerService {
         return employerDTOs;
     }
 
+    @Override
+    public EmployerDTO getEmployerById(int id) {
+        if (!employerRepository.existsById(id)) {
+            throw new ValidationException("Employer does not exist");
+        }
+
+        EmployerEntity employerEntity = employerRepository.findById(id);
+        EmployerDTO employerDTO = modelMapper.map(employerEntity, EmployerDTO.class);
+        modelMapper.map(employerEntity.getUser(), employerDTO);
+        return employerDTO;
+    }
+
+    @Override
+    public void deleteEmployer(int id) {
+        if (!employerRepository.existsById(id)) {
+            throw new ValidationException("Employer does not exist");
+        }
+
+        employerRepository.deleteById(id);
+        userRepository.deleteById(id);
+    }
+
+    @Override
+    public void updateEmployer(int id, EmployerDTO employer) {
+        if (!employerRepository.existsById(id)) {
+            throw new ValidationException("Employer does not exist");
+        }
+
+        validarEmployerDTO(employer);
+
+        EmployerEntity employerEntity = modelMapper.map(employerRepository.findById(id), EmployerEntity.class);
+        modelMapper.map(employer, employerEntity);
+        employerEntity.setId(id);
+
+        long currentTimeMillis = System.currentTimeMillis();
+
+        Timestamp timestamp = new Timestamp(currentTimeMillis);
+        employerEntity.setDateUpdated(timestamp);
+
+        UsersEntity user = modelMapper.map(userRepository.findById(id), UsersEntity.class);
+        modelMapper.map(employer, user);
+        user.setId(id);
+        user.setDateUpdated(timestamp);
+
+        employerRepository.save(employerEntity);
+        userRepository.save(user);
+    }
+
     void validarEmployerDTO(EmployerDTO employerDTO){
         if(employerDTO.getFirstName() == null
                 || employerDTO.getLastName() == null || employerDTO.getEmail() == null
