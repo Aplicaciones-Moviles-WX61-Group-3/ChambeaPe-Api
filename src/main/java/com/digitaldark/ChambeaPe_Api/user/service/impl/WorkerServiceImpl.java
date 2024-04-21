@@ -66,6 +66,15 @@ public class WorkerServiceImpl implements WorkerService {
         return workerDTO;
     }
 
+    @Override
+    public void deleteWorker(int id) {
+        if (!workerRepository.existsById(id)) {
+            throw new ValidationException("Worker does not exist");
+        }
+        workerRepository.deleteById(id);
+        userRepository.deleteById(id);
+    }
+
     void validarWorkerDTO(WorkerDTO workerDTO){
         if(workerDTO.getFirstName() == null
                 || workerDTO.getLastName() == null || workerDTO.getEmail() == null

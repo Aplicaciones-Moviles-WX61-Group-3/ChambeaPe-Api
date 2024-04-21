@@ -63,4 +63,17 @@ public class EmployerController {
     public ResponseEntity<EmployerDTO> getEmployerById(@PathVariable("id") int id) {
      return new ResponseEntity<EmployerDTO>(employerService.getEmployerById(id), HttpStatus.OK);
     }
+
+    //URL: http://localhost:8080/api/v1/employers/{id}
+    //Method: DELETE
+    @Operation(summary = "Delete employer")
+    @ApiResponse(responseCode = "200",
+            description = "Successful operation, employer deleted",
+            content = @Content(mediaType = "application/json"))
+    @Transactional
+    @DeleteMapping("/employers/{id}")
+    public ResponseEntity<Object> deleteEmployer(@PathVariable("id") int id) {
+     employerService.deleteEmployer(id);
+     return new ResponseEntity<>("Employer was deleted successfully",HttpStatus.OK);
+    }
 }

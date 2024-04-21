@@ -64,6 +64,16 @@ public class EmployerServiceImpl implements EmployerService {
         return employerDTO;
     }
 
+    @Override
+    public void deleteEmployer(int id) {
+        if (!employerRepository.existsById(id)) {
+            throw new ValidationException("Employer does not exist");
+        }
+
+        employerRepository.deleteById(id);
+        userRepository.deleteById(id);
+    }
+
     void validarEmployerDTO(EmployerDTO employerDTO){
         if(employerDTO.getFirstName() == null
                 || employerDTO.getLastName() == null || employerDTO.getEmail() == null

@@ -10,5 +10,5 @@ public interface WorkerService {
     public abstract List<WorkerEntity> getAllWorkers_v1();
     public abstract List<WorkerDTO> getAllWorkers();
     public abstract WorkerDTO getWorkerById(int id);
-
+    public abstract void deleteWorker(int id);
 }

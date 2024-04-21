@@ -10,5 +10,5 @@ public interface EmployerService {
     public abstract List<EmployerEntity> getAllEmployers_v1();
     public abstract List<EmployerDTO> getAllEmployers();
     public abstract EmployerDTO getEmployerById(int id);
-
+    public abstract void deleteEmployer(int id);
 }

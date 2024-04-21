@@ -65,4 +65,18 @@ public class WorkerController {
         return new ResponseEntity<WorkerDTO>(workerService.getWorkerById(id), HttpStatus.OK);
     }
 
+    //URL: http://localhost:8080/api/v1/workers/{id}
+    //Method: DELETE
+    @Operation(summary = "Delete Worker by Id")
+    @ApiResponse(responseCode = "201",
+            description = "Successful operation, returning Worker deleted",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = WorkerDTO.class)))
+    @Transactional
+    @DeleteMapping("/workers/{id}")
+    public ResponseEntity<Object> deleteWorker(@PathVariable("id") int id) {
+        workerService.deleteWorker(id);
+        return new ResponseEntity<>("Worker was deleted successfully",HttpStatus.OK);
+    }
+
 }
