@@ -1,5 +1,6 @@
 package com.digitaldark.ChambeaPe_Api.user.service.impl;
 
+import com.digitaldark.ChambeaPe_Api.email.service.IEmailService;
 import com.digitaldark.ChambeaPe_Api.shared.exception.ResourceNotFoundException;
 import com.digitaldark.ChambeaPe_Api.shared.exception.ValidationException;
 import com.digitaldark.ChambeaPe_Api.user.dto.request.UserLoginDTO;
@@ -12,10 +13,12 @@ import com.digitaldark.ChambeaPe_Api.user.repository.UserRepository;
 import com.digitaldark.ChambeaPe_Api.user.service.EmployerService;
 import com.digitaldark.ChambeaPe_Api.user.service.UserService;
 import com.digitaldark.ChambeaPe_Api.user.service.WorkerService;
+import jakarta.mail.MessagingException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,8 +38,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private WorkerService workerService;
 
+    @Autowired
+    private IEmailService emailService;
+
     @Override
-    public UsersEntity createUser(UsersEntity user) {
+    public UsersEntity createUser(UsersEntity user) throws MessagingException, IOException {
         if (userRepository.existsById(user.getId())) {
             throw new ValidationException("User already exists");
         } else if (userRepository.existsByEmailOrPhoneNumber(user.getEmail(), user.getPhoneNumber())) {
@@ -63,14 +69,13 @@ public class UserServiceImpl implements UserService {
             throw new ValidationException("userRole is invalid");
         }
 
+        emailService.userRegistered(user.getEmail());
         return user;
     }
 
     @Override
-    public UserResponseDTO createUserDTO(UserRequestDTO user) {
-        if (userRepository.existsById(user.getId())) {
-            throw new ValidationException("User already exists");
-        } else if (userRepository.existsByEmailOrPhoneNumber(user.getEmail(), user.getPhoneNumber())) {
+    public UserResponseDTO createUserDTO(UserRequestDTO user) throws MessagingException, IOException {
+        if (userRepository.existsByEmailOrPhoneNumber(user.getEmail(), user.getPhoneNumber())) {
             throw new ValidationException("Email or phone number already exists");
         }
 
@@ -88,6 +93,9 @@ public class UserServiceImpl implements UserService {
         userEntity.setIsActive( (byte) 1);
         userEntity.setDateCreated(timestamp);
         userEntity.setDateUpdated(timestamp);
+        userEntity.setBirthdate(new Timestamp(0));
+        userEntity.setOtp("");
+        userEntity.setIsVisible("1");
 
         System.out.println("El valor de user es: " + userEntity);
         userRepository.save(userEntity);
@@ -106,6 +114,8 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new ValidationException("userRole is invalid");
         }
+
+        emailService.userRegistered(user.getEmail());
 
         return modelMapper.map(userEntity, UserResponseDTO.class);
     }

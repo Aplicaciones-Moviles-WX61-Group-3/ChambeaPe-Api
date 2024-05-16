@@ -8,12 +8,14 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @Tag(name = "WorkerController", description = "Controller for Worker")
@@ -87,7 +89,7 @@ public class WorkerController {
                     schema = @Schema(implementation = WorkerDTO.class)))
     @Transactional
     @PutMapping("/workers/{id}")
-    public ResponseEntity<Object> updateWorker(@PathVariable("id") int id, @RequestBody WorkerDTO worker) {
+    public ResponseEntity<Object> updateWorker(@PathVariable("id") int id, @RequestBody WorkerDTO worker) throws MessagingException, IOException {
         workerService.updateWorker(id, worker);
         return new ResponseEntity<>("Worker was updated successfully",HttpStatus.OK);
     }

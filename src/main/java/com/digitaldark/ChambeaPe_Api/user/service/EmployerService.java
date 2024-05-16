@@ -2,7 +2,9 @@ package com.digitaldark.ChambeaPe_Api.user.service;
 
 import com.digitaldark.ChambeaPe_Api.user.dto.EmployerDTO;
 import com.digitaldark.ChambeaPe_Api.user.model.EmployerEntity;
+import jakarta.mail.MessagingException;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface EmployerService {
@@ -11,5 +13,5 @@ public interface EmployerService {
     public abstract List<EmployerDTO> getAllEmployers();
     public abstract EmployerDTO getEmployerById(int id);
     public abstract void deleteEmployer(int id);
-    public abstract void updateEmployer(int id, EmployerDTO employer);
+    public abstract void updateEmployer(int id, EmployerDTO employer) throws MessagingException, IOException;
 }

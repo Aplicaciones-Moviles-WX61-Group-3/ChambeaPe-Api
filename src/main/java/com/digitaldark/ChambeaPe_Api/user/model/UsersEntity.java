@@ -62,7 +62,7 @@ public class UsersEntity {
 
     @Column(name = "user_role", nullable = false, length = 1)
     private String userRole;
-
+/**/
     @Column(name="otp", nullable = true, length = 6)
     private String otp;
 

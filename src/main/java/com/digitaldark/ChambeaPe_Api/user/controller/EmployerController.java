@@ -8,12 +8,14 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @Tag(name = "EmployerController", description = "Controller to handle Employers")
@@ -85,7 +87,7 @@ public class EmployerController {
             content = @Content(mediaType = "application/json"))
     @Transactional
     @PutMapping("/employers/{id}")
-    public ResponseEntity<Object> updateEmployer(@PathVariable("id") int id, @RequestBody EmployerDTO employer) {
+    public ResponseEntity<Object> updateEmployer(@PathVariable("id") int id, @RequestBody EmployerDTO employer) throws MessagingException, IOException {
      employerService.updateEmployer(id, employer);
      return new ResponseEntity<>("Employer was updated successfully",HttpStatus.OK);
     }

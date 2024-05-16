@@ -12,7 +12,6 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserRequestDTO {
-    private int id;
 
     private String firstName;
 

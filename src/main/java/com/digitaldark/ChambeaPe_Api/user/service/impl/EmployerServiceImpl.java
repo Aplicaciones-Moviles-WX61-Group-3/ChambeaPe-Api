@@ -1,5 +1,6 @@
 package com.digitaldark.ChambeaPe_Api.user.service.impl;
 
+import com.digitaldark.ChambeaPe_Api.email.service.IEmailService;
 import com.digitaldark.ChambeaPe_Api.shared.exception.ValidationException;
 import com.digitaldark.ChambeaPe_Api.user.dto.EmployerDTO;
 import com.digitaldark.ChambeaPe_Api.user.model.EmployerEntity;
@@ -7,10 +8,12 @@ import com.digitaldark.ChambeaPe_Api.user.model.UsersEntity;
 import com.digitaldark.ChambeaPe_Api.user.repository.EmployerRepository;
 import com.digitaldark.ChambeaPe_Api.user.repository.UserRepository;
 import com.digitaldark.ChambeaPe_Api.user.service.EmployerService;
+import jakarta.mail.MessagingException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,6 +38,9 @@ public class EmployerServiceImpl implements EmployerService {
     public List<EmployerEntity> getAllEmployers_v1() {
         return employerRepository.findAll();
     }
+
+    @Autowired
+    private IEmailService emailService;
 
     @Override
     public List<EmployerDTO> getAllEmployers() {
@@ -75,7 +81,7 @@ public class EmployerServiceImpl implements EmployerService {
     }
 
     @Override
-    public void updateEmployer(int id, EmployerDTO employer) {
+    public void updateEmployer(int id, EmployerDTO employer) throws MessagingException, IOException {
         if (!employerRepository.existsById(id)) {
             throw new ValidationException("Employer does not exist");
         }
@@ -98,6 +104,7 @@ public class EmployerServiceImpl implements EmployerService {
 
         employerRepository.save(employerEntity);
         userRepository.save(user);
+        emailService.userModified(user.getEmail());
     }
 
     void validarEmployerDTO(EmployerDTO employerDTO){
