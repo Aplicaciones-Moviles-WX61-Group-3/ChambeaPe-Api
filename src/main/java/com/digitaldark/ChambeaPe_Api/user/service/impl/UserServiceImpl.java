@@ -68,9 +68,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDTO createUserDTO(UserRequestDTO user) {
-        if (userRepository.existsById(user.getId())) {
-            throw new ValidationException("User already exists");
-        } else if (userRepository.existsByEmailOrPhoneNumber(user.getEmail(), user.getPhoneNumber())) {
+        if (userRepository.existsByEmailOrPhoneNumber(user.getEmail(), user.getPhoneNumber())) {
             throw new ValidationException("Email or phone number already exists");
         }
 
@@ -88,6 +86,9 @@ public class UserServiceImpl implements UserService {
         userEntity.setIsActive( (byte) 1);
         userEntity.setDateCreated(timestamp);
         userEntity.setDateUpdated(timestamp);
+        userEntity.setBirthdate(new Timestamp(0));
+        userEntity.setOtp("");
+        userEntity.setIsVisible("1");
 
         System.out.println("El valor de user es: " + userEntity);
         userRepository.save(userEntity);
