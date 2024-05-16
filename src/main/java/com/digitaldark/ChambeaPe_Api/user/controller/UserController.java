@@ -10,12 +10,14 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -64,7 +66,7 @@ public class UserController {
                     schema = @Schema(implementation = UsersEntity.class)))
     @Transactional
     @PostMapping("/usersv1")
-    public ResponseEntity<UsersEntity> createUser(@RequestBody UsersEntity user) {
+    public ResponseEntity<UsersEntity> createUser(@RequestBody UsersEntity user) throws MessagingException, IOException {
 
         System.out.println("Se creo un usuario" + user);
 
@@ -80,7 +82,7 @@ public class UserController {
                     schema = @Schema(implementation = UserResponseDTO.class)))
     @Transactional
     @PostMapping("/users")
-    public ResponseEntity<UserResponseDTO> createUserDTO(@RequestBody UserRequestDTO user) {
+    public ResponseEntity<UserResponseDTO> createUserDTO(@RequestBody UserRequestDTO user) throws MessagingException, IOException {
 
         System.out.println("Se creo un usuario: " + user);
 

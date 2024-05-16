@@ -1,5 +1,6 @@
 package com.digitaldark.ChambeaPe_Api.user.service.impl;
 
+import com.digitaldark.ChambeaPe_Api.email.service.IEmailService;
 import com.digitaldark.ChambeaPe_Api.shared.exception.ResourceNotFoundException;
 import com.digitaldark.ChambeaPe_Api.shared.exception.ValidationException;
 import com.digitaldark.ChambeaPe_Api.user.dto.WorkerDTO;
@@ -8,10 +9,12 @@ import com.digitaldark.ChambeaPe_Api.user.model.WorkerEntity;
 import com.digitaldark.ChambeaPe_Api.user.repository.UserRepository;
 import com.digitaldark.ChambeaPe_Api.user.repository.WorkerRepository;
 import com.digitaldark.ChambeaPe_Api.user.service.WorkerService;
+import jakarta.mail.MessagingException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,6 +38,9 @@ public class WorkerServiceImpl implements WorkerService {
     public List<WorkerEntity> getAllWorkers_v1() {
         return workerRepository.findAll();
     }
+
+    @Autowired
+    private IEmailService emailService;
 
     @Override
     public List<WorkerDTO> getAllWorkers() {
@@ -76,7 +82,7 @@ public class WorkerServiceImpl implements WorkerService {
     }
 
     @Override
-    public void updateWorker(int id, WorkerDTO worker) {
+    public void updateWorker(int id, WorkerDTO worker) throws MessagingException, IOException {
         if (!workerRepository.existsById(id)) {
             throw new ResourceNotFoundException("Worker does not exist");
         }
@@ -98,6 +104,7 @@ public class WorkerServiceImpl implements WorkerService {
 
         workerRepository.save(workerEntity);
         userRepository.save(user);
+        emailService.userModified(user.getEmail());
     }
 
     void validarWorkerDTO(WorkerDTO workerDTO){

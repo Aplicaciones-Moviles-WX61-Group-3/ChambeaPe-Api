@@ -1,6 +1,7 @@
 package com.digitaldark.ChambeaPe_Api.email.service.impl;
 
 import com.digitaldark.ChambeaPe_Api.email.service.IEmailService;
+import com.digitaldark.ChambeaPe_Api.email.util.EmailTemplate;
 import com.digitaldark.ChambeaPe_Api.email.util.OtpUtil;
 import com.digitaldark.ChambeaPe_Api.shared.DateTimeEntity;
 import com.digitaldark.ChambeaPe_Api.shared.exception.ValidationException;
@@ -42,7 +43,7 @@ public class EmailServiceImpl implements IEmailService {
     private ModelMapper modelMapper;
 
     @Override
-    public void sendEmail(String[] toUser, String subject, String message) throws MessagingException, IOException {
+    public void sendEmail(String[] toUser, String subject, String message) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setFrom(emailAccount);
         mailMessage.setTo(toUser);
@@ -50,8 +51,6 @@ public class EmailServiceImpl implements IEmailService {
         mailMessage.setText(message);
 
         mailSender.send(mailMessage);
-
-        userRegistered(toUser[0]);
     }
 
     @Override
@@ -60,12 +59,10 @@ public class EmailServiceImpl implements IEmailService {
         MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true);
         message.setFrom(emailAccount);
         message.setTo(toUser);
-        message.setSubject("Bienvenido a ChambeaPe");
+        message.setSubject("ChambeaPe - Cuenta creada con éxito");
 
         // Cuerpo del correo electrónico en HTML
-        String htmlContent = "<h1>Bienvenido a ChambeaPe</h1>" +
-                "<p>¡Gracias por registrarte en nuestra plataforma!</p>" +
-                "<img src=\"https://img.freepik.com/foto-gratis/vista-lateral-pareja-sonriente-interior_23-2149903726.jpg\" alt=\"Logo\">";
+        String htmlContent = EmailTemplate.account_created_body;
 
         message.setText(htmlContent, true);
 
@@ -73,7 +70,24 @@ public class EmailServiceImpl implements IEmailService {
     }
 
     @Override
-    public void resetPassword(String toUser) throws MessagingException, IOException {
+    public void userModified(String toUser) throws MessagingException {
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true);
+        message.setFrom(emailAccount);
+        message.setTo(toUser);
+        message.setSubject("ChambeaPe - Actualización de los datos de la cuenta");
+
+        // Cuerpo del correo electrónico en HTML
+        String htmlContent = EmailTemplate.account_updated_body;
+
+        message.setText(htmlContent, true);
+
+        mailSender.send(mimeMessage);
+    }
+
+
+    @Override
+    public void generateCodeOtp(String toUser) throws MessagingException {
 
         if (!userRepository.existsByEmail(toUser)) {
             throw new ValidationException("User email does not exist");
@@ -84,12 +98,10 @@ public class EmailServiceImpl implements IEmailService {
         MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true);
         message.setFrom(emailAccount);
         message.setTo(toUser);
-        message.setSubject("Restablecer contraseña");
+        message.setSubject("ChambeaPe - Restablecer contraseña");
 
         // Cuerpo del correo electrónico en HTML
-        String htmlContent = "<h1>Restablecer contraseña</h1>" +
-                "<p>Para restablecer tu contraseña, ingresa el siguiente código:</p>" +
-                "<h2>" + otp + "</h2>";
+        String htmlContent = EmailTemplate.generateCodeOtpBody(otp);
 
         message.setText(htmlContent, true);
 

@@ -23,7 +23,7 @@ public class EmailController {
     private IEmailService emailService;
 
     @PostMapping("/emails/sendMessage")
-    public ResponseEntity<?> receiveRequestEmail(@RequestBody EmailDTO emailDto) throws MessagingException, IOException {
+    public ResponseEntity<?> receiveRequestEmail(@RequestBody EmailDTO emailDto){
 
         System.out.println("Mensaje Recibido " + emailDto);
 
@@ -35,12 +35,12 @@ public class EmailController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/emails/changePassword")
-    public ResponseEntity<?> receiveRequestChangePassword(String email) throws MessagingException, IOException {
+    @PostMapping("/emails/generateOtpCode")
+    public ResponseEntity<?> receiveRequestChangePassword(String email) throws MessagingException {
 
         System.out.println("Mensaje Recibido " + email);
 
-        emailService.resetPassword(email);
+        emailService.generateCodeOtp(email);
 
         Map<String,String> response = new HashMap<>();
         response.put("Estado", "Codigo de verificación enviado a su correo");
