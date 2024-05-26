@@ -26,9 +26,13 @@ public class UserResponseDTO {
 
     private String gender;
 
+    private String dni;
+
     private String profilePic;
 
     private String description;
 
     private String userRole;
+
+    private byte hasPremium;
 }
