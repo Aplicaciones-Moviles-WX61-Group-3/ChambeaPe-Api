@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,7 +54,7 @@ public class UserController {
                     schema = @Schema(implementation = UserResponseDTO.class)))
     @Transactional(readOnly = true)
     @PostMapping("/users/login")
-    public ResponseEntity<UserResponseDTO> getUserByEmailAndPass(@RequestBody UserLoginDTO userLoginDTO) {
+    public ResponseEntity<UserResponseDTO> getUserByEmailAndPass(@Valid @RequestBody UserLoginDTO userLoginDTO) {
         return new ResponseEntity<UserResponseDTO>(userService.getUserEmailAndPass(userLoginDTO), HttpStatus.OK);
     }
 
@@ -82,14 +83,10 @@ public class UserController {
                     schema = @Schema(implementation = UserResponseDTO.class)))
     @Transactional
     @PostMapping("/users")
-    public ResponseEntity<UserResponseDTO> createUserDTO(@RequestBody UserRequestDTO user) throws MessagingException, IOException {
+    public ResponseEntity<UserResponseDTO> createUserDTO(@Valid @RequestBody UserRequestDTO user) throws MessagingException, IOException {
 
         System.out.println("Se creo un usuario: " + user);
 
         return new ResponseEntity<UserResponseDTO>(userService.createUserDTO(user), HttpStatus.CREATED);
     }
-
-
-
-    
 }
