@@ -27,12 +27,10 @@ public class ReviewServiceImpl implements ReviewService {
     private DateTimeEntity dateTimeEntity;
     @Autowired
     private WorkerRepository workerRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
     @Autowired
     private EmployerRepository employerRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public ReviewResponseDTO createReview(ReviewRequestDTO review, int id) {
@@ -44,10 +42,7 @@ public class ReviewServiceImpl implements ReviewService {
             throw new ValidationException("User does not exist");
         }
 
-
-
         ReviewsEntity reviewEntity = modelMapper.map(review, ReviewsEntity.class);
-
 
         reviewEntity.setDateCreated(dateTimeEntity.currentTime());
         reviewEntity.setDateUpdated(dateTimeEntity.currentTime());
@@ -57,6 +52,7 @@ public class ReviewServiceImpl implements ReviewService {
             if(!workerRepository.existsById(id)){
                 throw new ValidationException("Worker does not exist");
             }
+
             reviewEntity.setEmployer(employerRepository.findById(review.getSentById()));
             reviewEntity.setWorker(workerRepository.findById(id));
         }
@@ -68,14 +64,9 @@ public class ReviewServiceImpl implements ReviewService {
             reviewEntity.setEmployer(employerRepository.findById(id));
         }
 
-        //Imprime el objeto
-        System.out.println(reviewEntity);
-
-
         reviewRepository.save(reviewEntity);
 
         return modelMapper.map(reviewEntity, ReviewResponseDTO.class);
-
     }
 
     @Override
@@ -92,10 +83,10 @@ public class ReviewServiceImpl implements ReviewService {
         if (!reviewRepository.existsById(id)) {
             throw new ValidationException("Review does not exist");
         }
-
         ReviewsEntity reviewEntity = reviewRepository.findById(id);
         modelMapper.map(review, reviewEntity);
 
+        reviewEntity.setId(id);
         reviewEntity.setDateCreated(dateTimeEntity.currentTime());
         reviewEntity.setDateUpdated(dateTimeEntity.currentTime());
 
