@@ -1,6 +1,7 @@
 package com.digitaldark.ChambeaPe_Api.chat.controller;
 
 import com.digitaldark.ChambeaPe_Api.chat.dto.ChatMessage;
+import jakarta.validation.Valid;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -14,7 +15,7 @@ public class ChatController {
 
     @MessageMapping("/chat/{roomId}")
     @SendTo("/topic/{roomId}")
-    public ChatMessage chat(@DestinationVariable String roomId, ChatMessage message){
+    public ChatMessage chat(@DestinationVariable String roomId, @Valid ChatMessage message){
         LocalDateTime timestamp = LocalDateTime.now();
         String formattedTimestamp = timestamp.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         message.setTimestamp(formattedTimestamp);

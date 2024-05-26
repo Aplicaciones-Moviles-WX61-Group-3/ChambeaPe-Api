@@ -68,7 +68,7 @@ public class PostulationController {
 
     //URL: http://localhost:8080/api/v1/postulations/{id}
     //Method: PUT
-    @Operation(summary = "Update postulation")
+    @Operation(summary = "Update postulation if it was accepted")
     @ApiResponse(responseCode = "201",
             description = "Successful operation, postulation updated",
             content = @Content(mediaType = "application/json"))

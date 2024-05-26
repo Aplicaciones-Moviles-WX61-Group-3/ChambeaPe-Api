@@ -3,7 +3,10 @@ package com.digitaldark.ChambeaPe_Api.email.controller;
 import com.digitaldark.ChambeaPe_Api.email.dto.EmailDTO;
 import com.digitaldark.ChambeaPe_Api.email.service.IEmailService;
 import com.digitaldark.ChambeaPe_Api.user.dto.response.UserResponseDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.mail.MessagingException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,8 +25,11 @@ public class EmailController {
     @Autowired
     private IEmailService emailService;
 
+    @Operation(summary = "Send Email")
+    @ApiResponse(responseCode = "201",
+            description = "Successful operation, sending email")
     @PostMapping("/emails/sendMessage")
-    public ResponseEntity<?> receiveRequestEmail(@RequestBody EmailDTO emailDto){
+    public ResponseEntity<?> receiveRequestEmail(@Valid @RequestBody EmailDTO emailDto){
 
         System.out.println("Mensaje Recibido " + emailDto);
 
@@ -35,6 +41,9 @@ public class EmailController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "Generate Otp Code for a user by Email")
+    @ApiResponse(responseCode = "201",
+            description = "Successful operation, generating otp code")
     @PostMapping("/emails/generateOtpCode")
     public ResponseEntity<?> receiveRequestChangePassword(String email) throws MessagingException {
 
@@ -48,6 +57,9 @@ public class EmailController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "Validate Otp Code With Email")
+    @ApiResponse(responseCode = "201",
+            description = "Successful operation, validating otp code")
     @PostMapping("/emails/validateOtp")
     public ResponseEntity<UserResponseDTO> validateOtp(String email, String otp) {
         return ResponseEntity.ok(emailService.validateOtpInChangePassword(email, otp));
