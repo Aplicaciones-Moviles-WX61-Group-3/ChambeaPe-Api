@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ReviewRepository extends JpaRepository<ReviewsEntity, Integer> {
     List<ReviewsEntity> findAllByWorkerId(int id);
-
+    ReviewsEntity findById(int id);
 }

@@ -4,6 +4,7 @@ import com.digitaldark.ChambeaPe_Api.email.dto.EmailDTO;
 import com.digitaldark.ChambeaPe_Api.email.service.IEmailService;
 import com.digitaldark.ChambeaPe_Api.user.dto.response.UserResponseDTO;
 import jakarta.mail.MessagingException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +24,7 @@ public class EmailController {
     private IEmailService emailService;
 
     @PostMapping("/emails/sendMessage")
-    public ResponseEntity<?> receiveRequestEmail(@RequestBody EmailDTO emailDto){
+    public ResponseEntity<?> receiveRequestEmail(@Valid @RequestBody EmailDTO emailDto){
 
         System.out.println("Mensaje Recibido " + emailDto);
 

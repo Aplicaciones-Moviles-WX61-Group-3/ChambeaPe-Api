@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -73,7 +74,7 @@ public class PostController {
                     schema = @Schema(implementation = PostResponseDTO.class)))
     @Transactional
     @PostMapping("employers/{employerId}/posts")
-    public ResponseEntity<PostResponseDTO> createPost(@RequestBody PostRequestDTO post, @PathVariable("employerId") int employerId) {
+    public ResponseEntity<PostResponseDTO> createPost(@Valid @RequestBody PostRequestDTO post, @PathVariable("employerId") int employerId) {
         return new ResponseEntity<PostResponseDTO>(postService.createPost(post, employerId), HttpStatus.CREATED);
     }
 
@@ -100,7 +101,7 @@ public class PostController {
                     schema = @Schema(implementation = PostResponseDTO.class)))
     @Transactional
     @PutMapping("/posts/{id}")
-    public ResponseEntity<Object> updatePost(@PathVariable("id") int id, @RequestBody PostRequestDTO post) {
+    public ResponseEntity<Object> updatePost(@PathVariable("id") int id,@Valid @RequestBody PostRequestDTO post) {
         postService.updatePost(id, post);
         return new ResponseEntity<>(HttpStatus.OK);
     }
