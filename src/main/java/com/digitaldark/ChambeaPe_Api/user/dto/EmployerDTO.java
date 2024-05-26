@@ -32,7 +32,11 @@ public class EmployerDTO {
     @NotBlank(message = "Phone number cannot be blank")
     private String phoneNumber;
 
-    @NotNull(message = "Birthdate cannot be null")
+    @NotNull(message = "Dni cannot be null")
+    @Size(min = 8, max = 8, message = "Dni must be 8 characters")
+    private String dni;
+
+    @NotNull(message = "HasPremium cannot be null")
     private byte hasPremium;
 
     @NotBlank(message ="Profile picture cannot be blank")

@@ -42,6 +42,9 @@ public class UsersEntity {
     @Column(name = "gender", nullable = false, length = 1)
     private String gender;
 
+    @Column(name = "dni", nullable = false)
+    private String dni;
+
     @Column(name = "has_premium", nullable = false)
     private byte hasPremium;
 

@@ -3,6 +3,7 @@ package com.digitaldark.ChambeaPe_Api.user.dto.request;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -37,6 +38,10 @@ public class UserRequestDTO {
 
     @NotBlank(message = "Gender cannot be blank")
     private String gender;
+
+    @NotBlank(message = "DNI cannot be blank")
+    @Size(min = 8, max = 8, message = "DNI must be 8 characters")
+    private String dni;
 
     @NotBlank(message = "Profile picture cannot be blank")
     private String profilePic;
