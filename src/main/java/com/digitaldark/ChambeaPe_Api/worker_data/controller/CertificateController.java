@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,7 +50,7 @@ public class CertificateController {
                     schema = @Schema(implementation = CertificateResponseDTO.class)))
     @Transactional
     @PostMapping("/{id}/certificates")
-    public ResponseEntity<CertificateResponseDTO> createCertificate(@RequestBody CertificateRequestDTO certificate, @PathVariable(value = "id") int userId) {
+    public ResponseEntity<CertificateResponseDTO> createCertificate(@Valid @RequestBody CertificateRequestDTO certificate, @PathVariable(value = "id") int userId) {
         return new ResponseEntity<CertificateResponseDTO>(certificateService.createCertificate(certificate, userId), HttpStatus.CREATED);
     }
 
@@ -79,7 +80,7 @@ public class CertificateController {
     public ResponseEntity<CertificateResponseDTO> updateCertificate(
             @PathVariable(value = "userId") int userId,
             @PathVariable(value = "certificateId") int certificateId,
-            @RequestBody CertificateRequestDTO certificateDetails) {
+            @Valid @RequestBody CertificateRequestDTO certificateDetails) {
         return new ResponseEntity<CertificateResponseDTO>(certificateService.updateCertificate(certificateId, certificateDetails), HttpStatus.OK);
     }
 

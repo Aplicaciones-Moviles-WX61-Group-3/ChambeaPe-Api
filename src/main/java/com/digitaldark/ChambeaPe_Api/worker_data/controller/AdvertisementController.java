@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,7 +63,7 @@ public class AdvertisementController {
                     schema = @Schema(implementation = AdvertisementResponseDTO.class)))
     @Transactional
     @PostMapping("/{id}/advertisements")
-    public ResponseEntity<AdvertisementResponseDTO> createAdvertisement(@RequestBody AdvertisementRequestDTO advertisement, @PathVariable(value = "id") int userId) {
+    public ResponseEntity<AdvertisementResponseDTO> createAdvertisement(@Valid @RequestBody AdvertisementRequestDTO advertisement, @PathVariable(value = "id") int userId) {
         return new ResponseEntity<AdvertisementResponseDTO>(advertisementService.createAdvertisement(advertisement, userId), HttpStatus.CREATED);
     }
 
@@ -79,7 +80,7 @@ public class AdvertisementController {
     public ResponseEntity<AdvertisementResponseDTO> updateAdvertisement(
             @PathVariable(value = "id") int userId,
             @PathVariable(value = "advertisementId") int advertisementId,
-            @RequestBody AdvertisementRequestDTO advertisementDetails) {
+            @Valid @RequestBody AdvertisementRequestDTO advertisementDetails) {
         return new ResponseEntity<AdvertisementResponseDTO>(advertisementService.updateAdvertisement(advertisementId, advertisementDetails), HttpStatus.OK);
     }
 

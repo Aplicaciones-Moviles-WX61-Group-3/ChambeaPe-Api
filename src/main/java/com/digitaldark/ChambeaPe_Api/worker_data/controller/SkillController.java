@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +48,7 @@ public class SkillController {
                     schema = @Schema(implementation = SkillResponseDTO.class)))
     @Transactional
     @PostMapping("/{id}/skills")
-    public ResponseEntity<SkillResponseDTO> createSkill(@RequestBody SkillRequestDTO skill, @PathVariable(value = "id") int userId) {
+    public ResponseEntity<SkillResponseDTO> createSkill(@Valid @RequestBody SkillRequestDTO skill, @PathVariable(value = "id") int userId) {
         return new ResponseEntity<SkillResponseDTO>(skillService.createSkill(skill, userId), HttpStatus.CREATED);
     }
 

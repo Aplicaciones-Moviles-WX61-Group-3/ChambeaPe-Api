@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -61,7 +62,7 @@ public class PortfolioController {
                     schema = @Schema(implementation = PortfolioResponseDTO.class)))
     @Transactional
     @PostMapping("/{id}/portfolios")
-    public ResponseEntity<PortfolioResponseDTO> createPortfolio(@RequestBody PortfolioRequestDTO portfolio, @PathVariable(value = "id") int userId) {
+    public ResponseEntity<PortfolioResponseDTO> createPortfolio(@Valid @RequestBody PortfolioRequestDTO portfolio, @PathVariable(value = "id") int userId) {
         return new ResponseEntity<PortfolioResponseDTO>(portfolioService.createPortfolio(portfolio, userId), HttpStatus.CREATED);
     }
 

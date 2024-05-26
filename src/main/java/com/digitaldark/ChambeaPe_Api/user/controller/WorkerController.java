@@ -84,6 +84,7 @@ public class WorkerController {
 
     //URL: http://localhost:8080/api/v1/workers/{id}
     //Method: PUT
+    @Operation(summary = "Update Worker by Id")
     @ApiResponse(responseCode = "201",
             description = "Successful operation, returning Worker updated",
             content = @Content(mediaType = "application/json",
