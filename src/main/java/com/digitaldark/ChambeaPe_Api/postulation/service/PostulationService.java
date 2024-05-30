@@ -10,4 +10,6 @@ public interface PostulationService {
     public abstract PostulationResponseDTO createPostulation(int postId, int workerId, PostulationRequestDTO postulation);
     public abstract void deletePostulation(int postId, int workerId);
     public abstract void updatePostulation(int id);
+
+    public abstract List<PostulationResponseDTO> getAllPostulationsByUserAndRole(int userId, String role);
 }

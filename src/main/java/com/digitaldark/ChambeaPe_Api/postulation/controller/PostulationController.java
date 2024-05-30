@@ -78,4 +78,18 @@ public class PostulationController {
         postulationService.updatePostulation(id);
         return new ResponseEntity<>("Postulation was updated successfully",HttpStatus.OK);
     }
+
+    //URL: http://localhost:8080/api/v1/postulations
+    //Method: GET
+    @Operation(summary = "Get all postulations by userId and Role")
+    @ApiResponse(responseCode = "201",
+            description = "Successful operation, returning all postulations by userId",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = PostulationResponseDTO.class)))
+    @Transactional(readOnly = true)
+    @GetMapping("/postulations")
+    public ResponseEntity<List<PostulationResponseDTO>> getAllPostulationsByUserId(@RequestParam("userId") int userId, @RequestParam("role") String role) {
+        return new ResponseEntity<List<PostulationResponseDTO>>(postulationService.getAllPostulationsByUserAndRole(userId, role), HttpStatus.OK);
+    }
+
 }
