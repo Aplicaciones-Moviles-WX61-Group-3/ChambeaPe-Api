@@ -31,7 +31,21 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-    
+
+
+    //URL: http://localhost:8080/api/v1/users/{id}
+    //Method: GET
+    @Operation(summary = "Get user by id")
+    @ApiResponse(responseCode = "200",
+            description = "Successful operation, returning user by id",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = UserResponseDTO.class)))
+    @Transactional(readOnly = true)
+    @GetMapping("/users/{id}")
+    public ResponseEntity<UserResponseDTO> getUser(@PathVariable int id) {
+        return new ResponseEntity<UserResponseDTO>(userService.getUser(id), HttpStatus.OK);
+    }
+
     //URL: http://localhost:8080/api/v1/users
     //Method: GET
     @Operation(summary = "Get all users")
