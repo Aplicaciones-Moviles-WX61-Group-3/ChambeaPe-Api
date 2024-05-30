@@ -25,10 +25,10 @@ public class ContractEntity {
     private String state;
 
     @Column(name = "start_day", nullable = false)
-    private String startDay;
+    private Timestamp startDay;
 
     @Column(name = "end_day", nullable = false)
-    private String endDay;
+    private Timestamp endDay;
 
     @Column(name = "salary", nullable = false)
     private Double salary;
