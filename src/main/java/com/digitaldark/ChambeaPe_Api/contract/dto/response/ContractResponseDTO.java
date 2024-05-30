@@ -1,19 +1,21 @@
-package com.digitaldark.ChambeaPe_Api.postulation.dto.response;
+package com.digitaldark.ChambeaPe_Api.contract.dto.response;
 
-import com.digitaldark.ChambeaPe_Api.user.dto.EmployerDTO;
-import com.digitaldark.ChambeaPe_Api.user.dto.WorkerDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.sql.Timestamp;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostulationResponseDTO {
+public class ContractResponseDTO {
     private int id;
-    private int postId;
     private int workerId;
     private int employerId;
+    private Timestamp startDay;
+    private Timestamp endDay;
+    private Double salary;
+    private int postId;
 }

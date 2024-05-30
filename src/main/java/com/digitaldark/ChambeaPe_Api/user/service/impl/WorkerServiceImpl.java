@@ -111,7 +111,7 @@ public class WorkerServiceImpl implements WorkerService {
         if(workerDTO.getFirstName() == null
                 || workerDTO.getLastName() == null || workerDTO.getEmail() == null
                 || workerDTO.getPhoneNumber() == null || workerDTO.getProfilePic() == null
-                || workerDTO.getDescription() == null || workerDTO.getOccupation() == null){
+                || workerDTO.getDescription() == null){
             throw new ValidationException("Debe completar los campos requeridos");
         }
     }

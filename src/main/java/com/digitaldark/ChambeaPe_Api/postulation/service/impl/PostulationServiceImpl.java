@@ -9,8 +9,10 @@ import com.digitaldark.ChambeaPe_Api.postulation.repository.PostulationRepositor
 import com.digitaldark.ChambeaPe_Api.postulation.service.PostulationService;
 import com.digitaldark.ChambeaPe_Api.shared.DateTimeEntity;
 import com.digitaldark.ChambeaPe_Api.shared.exception.ResourceNotFoundException;
+import com.digitaldark.ChambeaPe_Api.shared.exception.ValidationException;
 import com.digitaldark.ChambeaPe_Api.user.dto.WorkerDTO;
 import com.digitaldark.ChambeaPe_Api.user.model.WorkerEntity;
+import com.digitaldark.ChambeaPe_Api.user.repository.UserRepository;
 import com.digitaldark.ChambeaPe_Api.user.repository.WorkerRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,8 @@ public class PostulationServiceImpl implements PostulationService {
     private PostRepository postRepository;
     @Autowired
     private WorkerRepository workerRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -43,7 +47,7 @@ public class PostulationServiceImpl implements PostulationService {
         return postulationEntities.stream()
                 .map(postulationEntity -> {
                     PostulationResponseDTO postulationResponseDTO = modelMapper.map(postulationEntity, PostulationResponseDTO.class);
-                    postulationResponseDTO.setWorker(getWorkerDTO(postulationEntity.getWorker()));
+                    postulationResponseDTO.setWorkerId(getWorkerDTO(postulationEntity.getWorker()).getId());
                     return postulationResponseDTO;
                 })
                 .collect(Collectors.toList());
@@ -75,7 +79,7 @@ public class PostulationServiceImpl implements PostulationService {
 
 
         PostulationResponseDTO postulationResponseDTO = modelMapper.map(postulationEntity, PostulationResponseDTO.class);
-        postulationResponseDTO.setWorker(getWorkerDTO(postulationEntity.getWorker()));
+        postulationResponseDTO.setWorkerId(getWorkerDTO(postulationEntity.getWorker()).getId());
 
         return postulationResponseDTO;
     }
@@ -109,6 +113,35 @@ public class PostulationServiceImpl implements PostulationService {
 
         postulationRepository.save(postulationEntity);
     }
+
+    @Override
+    public List<PostulationResponseDTO> getAllPostulationsByUserAndRole(int userId, String role) {
+
+        if(!role.equals("W") && !role.equals("E")){
+            throw new ValidationException("Role is invalid");
+        }
+
+        if (!userRepository.existsById(userId)) {
+            throw new ResourceNotFoundException("User not found");
+        }
+
+        if(role.equals("E")){
+            if(workerRepository.existsById(userId)){
+                throw new ValidationException("User is not an employer");
+            }
+
+            return postulationRepository.findAllByEmployerId(userId);
+        }
+        else {
+            if(!workerRepository.existsById(userId)){
+                throw new ValidationException("User is not a worker");
+            }
+
+            return postulationRepository.findAllByWorkerId(userId);
+        }
+    }
+
+
 
     //Functions
 
