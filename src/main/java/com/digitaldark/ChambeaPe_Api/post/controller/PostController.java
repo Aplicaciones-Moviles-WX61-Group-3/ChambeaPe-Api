@@ -101,9 +101,8 @@ public class PostController {
                     schema = @Schema(implementation = PostResponseDTO.class)))
     @Transactional
     @PutMapping("/posts/{id}")
-    public ResponseEntity<Object> updatePost(@PathVariable("id") int id,@Valid @RequestBody PostRequestDTO post) {
-        postService.updatePost(id, post);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<PostResponseDTO> updatePost(@PathVariable("id") int id,@Valid @RequestBody PostRequestDTO post) {
+        return new ResponseEntity<PostResponseDTO>(postService.updatePost(id, post), HttpStatus.OK);
     }
 
 }

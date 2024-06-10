@@ -1,6 +1,7 @@
 package com.digitaldark.ChambeaPe_Api.contract.controller;
 
 import com.digitaldark.ChambeaPe_Api.contract.dto.request.ContractRequestDTO;
+import com.digitaldark.ChambeaPe_Api.contract.dto.response.ContractPoResponseDTO;
 import com.digitaldark.ChambeaPe_Api.contract.dto.response.ContractResponseDTO;
 import com.digitaldark.ChambeaPe_Api.contract.service.ContractService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -69,8 +70,8 @@ public class ContractController {
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ContractResponseDTO.class)))
     @GetMapping("/contracts")
-    public ResponseEntity<ContractResponseDTO> getContractByWorkerIdAndEmployerId(@RequestParam("workerId") int workerId, @RequestParam("employerId") int employerId) {
-        return new ResponseEntity<ContractResponseDTO>(contractService.getContractByWorkerIdAndEmployerId(workerId, employerId), HttpStatus.OK);
+    public ResponseEntity<List<ContractResponseDTO>> getContractByWorkerIdAndEmployerId(@RequestParam("workerId") int workerId, @RequestParam("employerId") int employerId) {
+        return new ResponseEntity<List<ContractResponseDTO>>(contractService.getContractByWorkerIdAndEmployerId(workerId, employerId), HttpStatus.OK);
     }
 
     //URL: http://localhost:8080/api/v1/contracts/user/{userId}
@@ -83,5 +84,17 @@ public class ContractController {
     @GetMapping("/contracts/user/{userId}")
     public ResponseEntity<List<ContractResponseDTO>> getAllContractsByUserId(@PathVariable("userId") int userId) {
         return new ResponseEntity<List<ContractResponseDTO>>(contractService.getAllContractsByUserId(userId), HttpStatus.OK);
+    }
+
+    //URL: http://localhost:8080/api/v1/contracts/user/{userId}/states
+    //Method: GET
+    @Operation(summary = "Get all contracts separated by states by userId")
+    @ApiResponse(responseCode = "201",
+            description = "Successful operation, returning all contracts with states by userId",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = ContractPoResponseDTO.class)))
+    @GetMapping("/contracts/user/{userId}/states")
+    public ResponseEntity<List<List<ContractPoResponseDTO>>> getAllContractsWithStatesByUserId(@PathVariable("userId") int userId) {
+        return new ResponseEntity<List<List<ContractPoResponseDTO>>>(contractService.getAllContractsWithStatesByUserId(userId), HttpStatus.OK);
     }
 }

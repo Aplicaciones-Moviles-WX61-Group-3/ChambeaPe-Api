@@ -80,7 +80,7 @@ public class PostServiceImpl  implements PostService {
     }
 
     @Override
-    public void updatePost(int id, PostRequestDTO post) {
+    public PostResponseDTO updatePost(int id, PostRequestDTO post) {
         if(!postRepository.existsById(id)) {
             throw new ResourceNotFoundException("Post not found");
         }
@@ -90,6 +90,8 @@ public class PostServiceImpl  implements PostService {
         postEntity.setId(id);
 
         postRepository.save(postEntity);
+
+        return modelMapper.map(postEntity, PostResponseDTO.class);
     }
 
     @Override

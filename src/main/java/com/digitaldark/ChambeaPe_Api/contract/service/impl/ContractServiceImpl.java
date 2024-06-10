@@ -1,10 +1,13 @@
 package com.digitaldark.ChambeaPe_Api.contract.service.impl;
 
 import com.digitaldark.ChambeaPe_Api.contract.dto.request.ContractRequestDTO;
+import com.digitaldark.ChambeaPe_Api.contract.dto.response.ContractPoResponseDTO;
 import com.digitaldark.ChambeaPe_Api.contract.dto.response.ContractResponseDTO;
 import com.digitaldark.ChambeaPe_Api.contract.model.ContractEntity;
 import com.digitaldark.ChambeaPe_Api.contract.repository.ContractRepository;
 import com.digitaldark.ChambeaPe_Api.contract.service.ContractService;
+import com.digitaldark.ChambeaPe_Api.post.dto.response.PostResponseDTO;
+import com.digitaldark.ChambeaPe_Api.post.model.PostsEntity;
 import com.digitaldark.ChambeaPe_Api.post.repository.PostRepository;
 import com.digitaldark.ChambeaPe_Api.shared.DateTimeEntity;
 import com.digitaldark.ChambeaPe_Api.shared.exception.ResourceNotFoundException;
@@ -16,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class ContractServiceImpl  implements ContractService {
@@ -37,10 +42,15 @@ public class ContractServiceImpl  implements ContractService {
     public ContractResponseDTO createContract(ContractRequestDTO contract) {
         validateContractRequest(contract);
 
+        if (contractRepository.existsByPost(postRepository.findById(contract.getPostId()))) {
+            throw new ValidationException("Post already has a contract");
+        }
+        if (!Objects.equals(contract.getState(), "PENDING")) {
+            throw new ValidationException("State must be PENDING");
+        }
 
         modelMapper.getConfiguration().setAmbiguityIgnored(true);
         ContractEntity contractEntity = modelMapper.map(contract, ContractEntity.class);
-        contractEntity.setState("disabled");
         contractEntity.setDateCreated(dateTimeEntity.currentTime());
         contractEntity.setDateUpdated(dateTimeEntity.currentTime());
         contractEntity.setIsActive((byte) 1);
@@ -63,6 +73,14 @@ public class ContractServiceImpl  implements ContractService {
         if (!contractRepository.existsById(id)) {
             throw new ResourceNotFoundException("Contract not found");
         }
+
+        if (!Objects.equals(contract.getState(), "PENDING")) {
+            throw new ValidationException("State must be PENDING");
+        }
+        else if (!Objects.equals(contract.getState(), "ACCEPTED")) {
+            throw new ValidationException("State must be ACCEPTED");
+        }
+
         validateContractRequest(contract);
 
         ContractEntity contractEntity = contractRepository.findById(id);
@@ -76,7 +94,7 @@ public class ContractServiceImpl  implements ContractService {
     }
 
     @Override
-    public ContractResponseDTO getContractByWorkerIdAndEmployerId(int workerId, int employerId) {
+    public List<ContractResponseDTO> getContractByWorkerIdAndEmployerId(int workerId, int employerId) {
         if (!workerRepository.existsById(workerId)) {
             throw new ResourceNotFoundException("Worker not found");
         }
@@ -84,8 +102,9 @@ public class ContractServiceImpl  implements ContractService {
             throw new ResourceNotFoundException("Employer not found");
         }
 
-        ContractEntity contractEntity = contractRepository.findByWorkerIdAndEmployerId(workerId, employerId);
-        return modelMapper.map(contractEntity, ContractResponseDTO.class);
+        List<ContractEntity> contract = contractRepository.findByWorkerIdAndEmployerId(workerId, employerId);
+
+        return contract.stream().map(contractEntity -> modelMapper.map(contractEntity, ContractResponseDTO.class)).toList();
     }
 
     @Override
@@ -96,6 +115,32 @@ public class ContractServiceImpl  implements ContractService {
 
         return contractRepository.findByAllByUserId(userId);
     }
+
+    @Override
+    public List<List<ContractPoResponseDTO>> getAllContractsWithStatesByUserId(int userId) {
+        if (!workerRepository.existsById(userId) && !employerRepository.existsById(userId)) {
+            throw new ResourceNotFoundException("User not found");
+        }
+
+        List<ContractResponseDTO> contracts = contractRepository.findByAllByUserId(userId);
+
+        List<ContractPoResponseDTO> contractsPo = contracts
+                .stream()
+                .map(contract -> {
+                    ContractPoResponseDTO contractPo = modelMapper.map(contract, ContractPoResponseDTO.class);
+                    PostsEntity post = postRepository.findById(contract.getPostId());
+                    PostResponseDTO postResponseDTO = modelMapper.map(post, PostResponseDTO.class);
+                    contractPo.setPost(postResponseDTO);
+                    return contractPo;
+                })
+                .collect(Collectors.toList());
+
+        List<ContractPoResponseDTO> pending = contractsPo.stream().filter(contract -> contract.getState().equals("PENDING")).toList();
+        List<ContractPoResponseDTO> accepted = contractsPo.stream().filter(contract -> contract.getState().equals("ACCEPTED")).toList();
+
+        return List.of(pending, accepted);
+    }
+
     
     public void validateContractRequest(ContractRequestDTO contract) {
         if (!workerRepository.existsById(contract.getWorkerId())) {
