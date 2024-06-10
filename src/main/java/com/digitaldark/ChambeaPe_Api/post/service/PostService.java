@@ -10,6 +10,6 @@ public interface PostService {
     public abstract List<PostResponseDTO> getAllPosts();
     public abstract List<PostResponseDTO> getAllPostsByEmployerId(int employerId);
     public abstract PostResponseDTO createPost(PostRequestDTO post, int workId);
-    public abstract void updatePost(int id, PostRequestDTO post);
+    public abstract PostResponseDTO updatePost(int id, PostRequestDTO post);
     public abstract void deletePost(int id);
 }

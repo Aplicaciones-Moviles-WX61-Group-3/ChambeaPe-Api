@@ -33,6 +33,9 @@ public class ContractRequestDTO {
     @Positive(message = "Salary must be positive")
     private Double salary;
 
+    @NotBlank(message = "State cannot be blank")
+    private String state;
+
     @NotNull(message = "Post Id cannot be null")
     @Positive(message = "Post Id must be positive")
     private int postId;
