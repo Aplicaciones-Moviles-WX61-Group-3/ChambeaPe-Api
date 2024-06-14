@@ -74,11 +74,8 @@ public class ContractServiceImpl  implements ContractService {
             throw new ResourceNotFoundException("Contract not found");
         }
 
-        if (!Objects.equals(contract.getState(), "PENDING")) {
-            throw new ValidationException("State must be PENDING");
-        }
-        else if (!Objects.equals(contract.getState(), "ACCEPTED")) {
-            throw new ValidationException("State must be ACCEPTED");
+        if (!Objects.equals(contract.getState(), "PENDING") && !Objects.equals(contract.getState(), "ACCEPTED")) {
+            throw new ValidationException("State must be PENDING or ACCEPTED");
         }
 
         validateContractRequest(contract);
