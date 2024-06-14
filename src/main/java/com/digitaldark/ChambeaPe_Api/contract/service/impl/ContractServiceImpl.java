@@ -80,6 +80,7 @@ public class ContractServiceImpl  implements ContractService {
 
         validateContractRequest(contract);
 
+        modelMapper.getConfiguration().setAmbiguityIgnored(true);
         ContractEntity contractEntity = contractRepository.findById(id);
         modelMapper.map(contract, contractEntity);
         contractEntity.setDateUpdated(dateTimeEntity.currentTime());
