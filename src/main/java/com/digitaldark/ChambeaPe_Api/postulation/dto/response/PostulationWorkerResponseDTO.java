@@ -1,7 +1,6 @@
 package com.digitaldark.ChambeaPe_Api.postulation.dto.response;
 
-import com.digitaldark.ChambeaPe_Api.user.dto.EmployerDTO;
-import com.digitaldark.ChambeaPe_Api.user.dto.WorkerDTO;
+import com.digitaldark.ChambeaPe_Api.post.dto.response.PostResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,8 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostulationResponseDTO {
+public class PostulationWorkerResponseDTO {
     private int id;
-    private int postId;
-    private WorkerDTO worker;
+    private PostResponseDTO post;
 }
