@@ -2,6 +2,7 @@ package com.digitaldark.ChambeaPe_Api.postulation.service;
 
 import com.digitaldark.ChambeaPe_Api.postulation.dto.request.PostulationRequestDTO;
 import com.digitaldark.ChambeaPe_Api.postulation.dto.response.PostulationResponseDTO;
+import com.digitaldark.ChambeaPe_Api.postulation.dto.response.PostulationWorkerResponseDTO;
 
 import java.util.List;
 
@@ -11,5 +12,5 @@ public interface PostulationService {
     public abstract void deletePostulation(int postId, int workerId);
     public abstract void updatePostulation(int id);
 
-    public abstract List<PostulationResponseDTO> getAllPostulationsByUserAndRole(int userId, String role);
+    public abstract List<PostulationWorkerResponseDTO> getAllPostulationsByWorker(int userId);
 }

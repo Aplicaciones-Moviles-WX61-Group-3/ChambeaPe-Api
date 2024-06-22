@@ -1,15 +1,16 @@
 package com.digitaldark.ChambeaPe_Api.postulation.service.impl;
 
+import com.digitaldark.ChambeaPe_Api.post.dto.response.PostResponseDTO;
 import com.digitaldark.ChambeaPe_Api.post.model.PostsEntity;
 import com.digitaldark.ChambeaPe_Api.post.repository.PostRepository;
 import com.digitaldark.ChambeaPe_Api.postulation.dto.request.PostulationRequestDTO;
 import com.digitaldark.ChambeaPe_Api.postulation.dto.response.PostulationResponseDTO;
+import com.digitaldark.ChambeaPe_Api.postulation.dto.response.PostulationWorkerResponseDTO;
 import com.digitaldark.ChambeaPe_Api.postulation.model.PostulationsEntity;
 import com.digitaldark.ChambeaPe_Api.postulation.repository.PostulationRepository;
 import com.digitaldark.ChambeaPe_Api.postulation.service.PostulationService;
 import com.digitaldark.ChambeaPe_Api.shared.DateTimeEntity;
 import com.digitaldark.ChambeaPe_Api.shared.exception.ResourceNotFoundException;
-import com.digitaldark.ChambeaPe_Api.shared.exception.ValidationException;
 import com.digitaldark.ChambeaPe_Api.user.dto.WorkerDTO;
 import com.digitaldark.ChambeaPe_Api.user.model.WorkerEntity;
 import com.digitaldark.ChambeaPe_Api.user.repository.UserRepository;
@@ -47,7 +48,7 @@ public class PostulationServiceImpl implements PostulationService {
         return postulationEntities.stream()
                 .map(postulationEntity -> {
                     PostulationResponseDTO postulationResponseDTO = modelMapper.map(postulationEntity, PostulationResponseDTO.class);
-                    postulationResponseDTO.setWorkerId(getWorkerDTO(postulationEntity.getWorker()).getId());
+                    postulationResponseDTO.setWorker(getWorkerDTO(postulationEntity.getWorker()));
                     return postulationResponseDTO;
                 })
                 .collect(Collectors.toList());
@@ -79,7 +80,7 @@ public class PostulationServiceImpl implements PostulationService {
 
 
         PostulationResponseDTO postulationResponseDTO = modelMapper.map(postulationEntity, PostulationResponseDTO.class);
-        postulationResponseDTO.setWorkerId(getWorkerDTO(postulationEntity.getWorker()).getId());
+        postulationResponseDTO.setWorker(getWorkerDTO(postulationEntity.getWorker()));
 
         return postulationResponseDTO;
     }
@@ -115,32 +116,21 @@ public class PostulationServiceImpl implements PostulationService {
     }
 
     @Override
-    public List<PostulationResponseDTO> getAllPostulationsByUserAndRole(int userId, String role) {
-
-        if(!role.equals("W") && !role.equals("E")){
-            throw new ValidationException("Role is invalid");
+    public List<PostulationWorkerResponseDTO> getAllPostulationsByWorker(int workerId) {
+        if (!workerRepository.existsById(workerId)) {
+            throw new ResourceNotFoundException("Worker not found");
         }
 
-        if (!userRepository.existsById(userId)) {
-            throw new ResourceNotFoundException("User not found");
-        }
+        List<PostulationsEntity> postulationEntities = postulationRepository.findAllByWorkerId(workerId);
 
-        if(role.equals("E")){
-            if(workerRepository.existsById(userId)){
-                throw new ValidationException("User is not an employer");
-            }
-
-            return postulationRepository.findAllByEmployerId(userId);
-        }
-        else {
-            if(!workerRepository.existsById(userId)){
-                throw new ValidationException("User is not a worker");
-            }
-
-            return postulationRepository.findAllByWorkerId(userId);
-        }
+        return postulationEntities.stream()
+                .map(postulationEntity -> {
+                    PostulationWorkerResponseDTO postulationWorkerResponseDTO = modelMapper.map(postulationEntity, PostulationWorkerResponseDTO.class);
+                    postulationWorkerResponseDTO.setPost(getPostulationResponseDTO(postulationEntity));
+                    return postulationWorkerResponseDTO;
+                })
+                .collect(Collectors.toList());
     }
-
 
 
     //Functions
@@ -151,4 +141,11 @@ public class PostulationServiceImpl implements PostulationService {
 
         return workerDTO;
     }
+
+    public PostResponseDTO getPostulationResponseDTO(PostulationsEntity postulationEntity){
+        PostResponseDTO postResponseDTO = modelMapper.map(postulationEntity.getPost(), PostResponseDTO.class);
+        postResponseDTO.setEmployerId(postulationEntity.getPost().getEmployer().getId());
+        return postResponseDTO;
+    }
+
 }

@@ -2,6 +2,7 @@ package com.digitaldark.ChambeaPe_Api.postulation.controller;
 
 import com.digitaldark.ChambeaPe_Api.postulation.dto.request.PostulationRequestDTO;
 import com.digitaldark.ChambeaPe_Api.postulation.dto.response.PostulationResponseDTO;
+import com.digitaldark.ChambeaPe_Api.postulation.dto.response.PostulationWorkerResponseDTO;
 import com.digitaldark.ChambeaPe_Api.postulation.service.PostulationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -62,8 +63,7 @@ public class PostulationController {
     @DeleteMapping("/posts/{postId}/postulations/{workerId}")
     public ResponseEntity<Object> deletePostulation(@PathVariable("postId") int postId, @PathVariable("workerId") int workerId) {
         postulationService.deletePostulation(postId, workerId);
-        //return new ResponseEntity<Object>("Postulation deleted successfully",HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>("Postulation deleted successfully",HttpStatus.OK);
     }
 
     //URL: http://localhost:8080/api/v1/postulations/{id}
@@ -81,15 +81,15 @@ public class PostulationController {
 
     //URL: http://localhost:8080/api/v1/postulations
     //Method: GET
-    @Operation(summary = "Get all postulations by userId and Role")
+    @Operation(summary = "Get all postulations by WokerId")
     @ApiResponse(responseCode = "201",
-            description = "Successful operation, returning all postulations by userId",
+            description = "Successful operation, returning all postulations by workerId",
             content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = PostulationResponseDTO.class)))
+                    schema = @Schema(implementation = PostulationWorkerResponseDTO.class)))
     @Transactional(readOnly = true)
     @GetMapping("/postulations")
-    public ResponseEntity<List<PostulationResponseDTO>> getAllPostulationsByUserId(@RequestParam("userId") int userId, @RequestParam("role") String role) {
-        return new ResponseEntity<List<PostulationResponseDTO>>(postulationService.getAllPostulationsByUserAndRole(userId, role), HttpStatus.OK);
+    public ResponseEntity<List<PostulationWorkerResponseDTO>> getAllPostulationsByUserId(@RequestParam("userId") int workerId) {
+        return new ResponseEntity<List<PostulationWorkerResponseDTO>>(postulationService.getAllPostulationsByWorker(workerId), HttpStatus.OK);
     }
 
 }

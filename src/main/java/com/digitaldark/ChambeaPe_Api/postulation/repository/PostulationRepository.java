@@ -18,18 +18,7 @@ public interface PostulationRepository extends JpaRepository<PostulationsEntity,
 
     PostulationsEntity findByPostAndWorker(PostsEntity post, WorkerEntity worker);
 
-    @Query("SELECT new com.digitaldark.ChambeaPe_Api.postulation.dto.response.PostulationResponseDTO(" +
-            "p.id, p.post.id, p.worker.id, pos.employer.id) " +
-            "FROM PostulationsEntity p " +
-            "JOIN p.post pos " +
-            "WHERE p.worker.id = :workerId")
-    List<PostulationResponseDTO> findAllByWorkerId(@Param("workerId") int workerId);
 
-    //Ahora para el employer
-    @Query("SELECT new com.digitaldark.ChambeaPe_Api.postulation.dto.response.PostulationResponseDTO(" +
-            "p.id, p.post.id, p.worker.id, pos.employer.id) " +
-            "FROM PostulationsEntity p " +
-            "JOIN p.post pos " +
-            "WHERE pos.employer.id = :employerId")
-    List<PostulationResponseDTO> findAllByEmployerId(@Param("employerId") int employerId);
+
+    List<PostulationsEntity> findAllByWorkerId(int workerId);
 }
